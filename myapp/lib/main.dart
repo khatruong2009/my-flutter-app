@@ -1,9 +1,99 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(Login());
 }
 
+// LOGIN PAGE
+class Login extends StatefulWidget {
+  const Login({super.key});
+
+  @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  String username = '';
+  String password = '';
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+          appBar: AppBar(
+            backgroundColor: const Color.fromARGB(255, 42, 35, 235),
+            title: const Text('Login'),
+          ),
+          body: Stack(children: [
+            Container(
+              color: Colors.white,
+            ),
+            Center(
+                child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: TextField(
+                    onChanged: (text) {
+                      username = text;
+                    },
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Username',
+                        hintText: 'Enter your username'),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: TextField(
+                    onChanged: (text) {
+                      password = text;
+                    },
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Password',
+                        hintText: 'Enter your password'),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (username == 'admin' && password == 'admin') {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const MyApp()));
+                      } else {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('Error'),
+                                content: const Text(
+                                    'Username or password is incorrect'),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('Close'))
+                                ],
+                              );
+                            });
+                      }
+                    },
+                    child: const Text('Login'),
+                  ),
+                )
+              ],
+            ))
+          ])),
+    );
+  }
+}
+
+// HOME PAGE
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 

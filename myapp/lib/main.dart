@@ -3,6 +3,9 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_authenticator/amplify_authenticator.dart';
 import 'package:amplify_storage_s3/amplify_storage_s3.dart';
+import 'dart:io' as io;
+import 'package:aws_common/vm.dart';
+import 'package:file_picker/file_picker.dart';
 
 import 'amplifyconfiguration.dart';
 
@@ -266,6 +269,37 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  // upload file from device
+  Future<void> uploadFile() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['jpg', 'pdf', 'doc', 'png'],
+      withReadStream: true,
+      withData: false,
+    );
+
+    if (result == null) {
+      print('No file selected');
+      return;
+    }
+
+    final platformFile = result.files.single;
+    try {
+      final result = await Amplify.Storage.uploadFile(
+        localFile: AWSFile.fromStream(
+          platformFile.readStream!,
+          size: platformFile.size,
+        ),
+        key: platformFile.name,
+        onProgress: (p0) =>
+            print('Progress: ${p0.transferredBytes} / ${p0.totalBytes} %)'),
+      ).result;
+    } on StorageException catch (e) {
+      print(e.message);
+      rethrow;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -347,6 +381,24 @@ class _MyAppState extends State<MyApp> {
                 ),
               ),
             ),
+            Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    uploadFile();
+                  },
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.green[800]!),
+                  ),
+                  child: const Text(
+                    'Upload',
+                  ),
+                ),
+              ),
+            )
             // BottomNavigationBar(items: const [
             //   BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
             //   BottomNavigationBarItem(

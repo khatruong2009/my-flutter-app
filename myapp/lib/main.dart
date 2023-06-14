@@ -162,6 +162,14 @@ class _MyAppState extends State<MyApp> {
                     child: const Icon(Icons.storm_outlined),
                   )),
                 )),
+            Align(
+                alignment: Alignment.topLeft,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Logout'),
+                )),
             BottomNavigationBar(items: const [
               BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
               BottomNavigationBarItem(

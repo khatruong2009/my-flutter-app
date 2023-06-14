@@ -19,6 +19,7 @@ class _LoginState extends State<Login> {
   String email = '';
   String password = '';
 
+  // Amplify Configuration
   Future<void> _configureAmplify() async {
     try {
       final auth = AmplifyAuthCognito();
@@ -27,6 +28,50 @@ class _LoginState extends State<Login> {
       await Amplify.configure(amplifyconfig);
     } catch (e) {
       print('Could not configure Amplify');
+    }
+  }
+
+  // Sign Up
+  Future<void> _signUp() async {
+    try {
+      final userAttributes = {AuthUserAttributeKey.email: email};
+      final res = await Amplify.Auth.signUp(
+          username: email,
+          password: password,
+          options: SignUpOptions(userAttributes: userAttributes));
+      print(res);
+      await _confirmSignUp(res);
+    } on AuthException catch (e) {
+      print(e.message);
+    }
+  }
+
+  // Confirm Sign Up
+  Future<void> _confirmSignUp(SignUpResult result) async {
+    switch (result.nextStep.signUpStep) {
+      case AuthSignUpStep.confirmSignUp:
+        final codeDeliveryDetails = result.nextStep.codeDeliveryDetails!;
+        _handleCodeDelivery(codeDeliveryDetails);
+        break;
+      case AuthSignUpStep.done:
+        print('Sign up done');
+        break;
+    }
+  }
+
+  // Handle Code Delivery
+  void _handleCodeDelivery(AuthCodeDeliveryDetails codeDeliveryDetails) async {
+    print('Code sent to ${codeDeliveryDetails.destination}');
+  }
+
+  // Sign In
+  Future<void> _signIn() async {
+    try {
+      final res = await Amplify.Auth.signIn(
+          username: email, password: password, options: SignInOptions());
+      print(res);
+    } on AuthException catch (e) {
+      print(e.message);
     }
   }
 

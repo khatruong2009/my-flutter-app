@@ -6,8 +6,7 @@ void main() {
 
 // LOGIN PAGE
 class Login extends StatefulWidget {
-  const Login({super.key});
-
+  const Login({Key? key}) : super(key: key);
   @override
   State<Login> createState() => _LoginState();
 }
@@ -19,7 +18,8 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
+        home: Builder(
+      builder: (context) => Scaffold(
           appBar: AppBar(
             backgroundColor: const Color.fromARGB(255, 42, 35, 235),
             title: const Text('Login'),
@@ -89,13 +89,13 @@ class _LoginState extends State<Login> {
               ],
             ))
           ])),
-    );
+    ));
   }
 }
 
 // HOME PAGE
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   State<MyApp> createState() => _MyAppState();

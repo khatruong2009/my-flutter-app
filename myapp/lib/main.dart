@@ -258,6 +258,14 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int count = 0;
+  var list = [];
+
+  @override
+  void initState() {
+    listAlbum();
+    listAllWithGuestAccessLevel();
+    super.initState();
+  }
 
   // sign out function
   Future<void> _signOut() async {
@@ -300,6 +308,54 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  // list files
+  Future<void> listAlbum() async {
+    // print("CALLING LIST ITEMS");
+    try {
+      String? nextToken;
+      bool hashNextPage;
+
+      do {
+        final result = await Amplify.Storage.list(
+          path: 'public/',
+          options: StorageListOptions(
+            accessLevel: StorageAccessLevel.guest,
+            pageSize: 50,
+            nextToken: nextToken,
+            pluginOptions: const S3ListPluginOptions(
+              excludeSubPaths: true,
+            ),
+          ),
+        ).result;
+        // print('Items: ${result.items}');
+        nextToken = result.nextToken;
+        hashNextPage = result.hasNextPage;
+      } while (hashNextPage);
+    } on StorageException catch (e) {
+      print(e.message);
+      rethrow;
+    }
+  }
+
+  // list all files with guest access level
+  Future<void> listAllWithGuestAccessLevel() async {
+    try {
+      final result = await Amplify.Storage.list(
+        options: const StorageListOptions(
+          accessLevel: StorageAccessLevel.guest,
+          pluginOptions: S3ListPluginOptions.listAll(),
+        ),
+      ).result;
+      setState(() {
+        list = result.items;
+      });
+      // print('Items: ${result.items}');
+    } on StorageException catch (e) {
+      print(e.message);
+      rethrow;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -312,7 +368,18 @@ class _MyAppState extends State<MyApp> {
             Container(
               color: Colors.white,
             ),
-            Center(child: Text('$count', style: const TextStyle(fontSize: 50))),
+            // Center(child: Text('$count', style: const TextStyle(fontSize: 50))),
+            Center(
+              child: ListView(
+                children: [
+                  for (var item in list)
+                    ListTile(
+                      title: Text(item.key),
+                      subtitle: Text(item.lastModified.toString()),
+                    )
+                ],
+              ),
+            ),
             Align(
               alignment: Alignment.bottomRight,
               child: Padding(

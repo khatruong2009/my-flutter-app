@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'package:amplify_authenticator/amplify_authenticator.dart';
 
 import 'amplifyconfiguration.dart';
 
@@ -101,98 +102,110 @@ class _LoginState extends State<Login> {
 
   // LOGIN PAGE
 
+  // @override
+  // Widget build(BuildContext context) {
+  //   return MaterialApp(
+  //       home: Builder(
+  //     builder: (context) => Scaffold(
+  //         appBar: AppBar(
+  //           backgroundColor: const Color.fromARGB(255, 42, 35, 235),
+  //           title: const Text('Login'),
+  //         ),
+  //         body: Stack(children: [
+  //           Container(
+  //             color: Colors.white,
+  //           ),
+  //           Center(
+  //               child: Column(
+  //             children: [
+  //               Padding(
+  //                 padding: const EdgeInsets.all(20.0),
+  //                 child: TextField(
+  //                   onChanged: (text) {
+  //                     email = text;
+  //                   },
+  //                   decoration: const InputDecoration(
+  //                       border: OutlineInputBorder(),
+  //                       labelText: 'Email',
+  //                       hintText: 'Enter your email'),
+  //                 ),
+  //               ),
+  //               Padding(
+  //                 padding: const EdgeInsets.all(20.0),
+  //                 child: TextField(
+  //                   onChanged: (text) {
+  //                     password = text;
+  //                   },
+  //                   decoration: const InputDecoration(
+  //                       border: OutlineInputBorder(),
+  //                       labelText: 'Password',
+  //                       hintText: 'Enter your password'),
+  //                 ),
+  //               ),
+  //               Center(
+  //                 child: Row(
+  //                   children: [
+  //                     Padding(
+  //                       padding: const EdgeInsets.all(20.0),
+  //                       child: ElevatedButton(
+  //                         onPressed: () {
+  //                           if (email == 'admin' && password == 'admin') {
+  //                             Navigator.push(
+  //                                 context,
+  //                                 MaterialPageRoute(
+  //                                     builder: (context) => const MyApp()));
+  //                           } else {
+  //                             showDialog(
+  //                                 context: context,
+  //                                 builder: (BuildContext context) {
+  //                                   return AlertDialog(
+  //                                     title: const Text('Error'),
+  //                                     content: const Text(
+  //                                         'Email or password is incorrect'),
+  //                                     actions: [
+  //                                       TextButton(
+  //                                           onPressed: () {
+  //                                             Navigator.of(context).pop();
+  //                                           },
+  //                                           child: const Text('Close'))
+  //                                     ],
+  //                                   );
+  //                                 });
+  //                           }
+  //                         },
+  //                         child: const Text('Login'),
+  //                       ),
+  //                     ),
+  //                     Padding(
+  //                       padding: const EdgeInsets.all(20.0),
+  //                       child: ElevatedButton(
+  //                         onPressed: () {
+  //                           // _configureAmplify();
+  //                           _signUp();
+  //                         },
+  //                         child: const Text('Sign Up'),
+  //                       ),
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ),
+  //               // add a sign up button
+  //             ],
+  //           ))
+  //         ])),
+  //   ));
+  // }
+
+  // use Authenticator widget
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        home: Builder(
-      builder: (context) => Scaffold(
-          appBar: AppBar(
-            backgroundColor: const Color.fromARGB(255, 42, 35, 235),
-            title: const Text('Login'),
-          ),
-          body: Stack(children: [
-            Container(
-              color: Colors.white,
-            ),
-            Center(
-                child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: TextField(
-                    onChanged: (text) {
-                      email = text;
-                    },
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Email',
-                        hintText: 'Enter your email'),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: TextField(
-                    onChanged: (text) {
-                      password = text;
-                    },
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Password',
-                        hintText: 'Enter your password'),
-                  ),
-                ),
-                Center(
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (email == 'admin' && password == 'admin') {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const MyApp()));
-                            } else {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text('Error'),
-                                      content: const Text(
-                                          'Email or password is incorrect'),
-                                      actions: [
-                                        TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: const Text('Close'))
-                                      ],
-                                    );
-                                  });
-                            }
-                          },
-                          child: const Text('Login'),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            // _configureAmplify();
-                            _signUp();
-                          },
-                          child: const Text('Sign Up'),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                // add a sign up button
-              ],
-            ))
-          ])),
-    ));
+    return Authenticator(
+        child: MaterialApp(
+            builder: Authenticator.builder(),
+            home: MyApp(),
+            theme: ThemeData(
+              primarySwatch: Colors.blue,
+            )));
   }
 }
 
@@ -206,6 +219,16 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int count = 0;
+
+  // sign out function
+  Future<void> _signOut() async {
+    try {
+      await Amplify.Auth.signOut();
+      print('Signed out');
+    } on AuthException catch (e) {
+      print(e.message);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -273,6 +296,24 @@ class _MyAppState extends State<MyApp> {
                   },
                   child: const Text('Logout'),
                 )),
+            // sign out button
+            Align(
+              alignment: Alignment.topRight,
+              child: Padding(
+                padding: const EdgeInsets.all(100.0),
+                child: FloatingActionButton(
+                  onPressed: () {
+                    _signOut();
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const Login()));
+                  },
+                  backgroundColor: Colors.red,
+                  child: const Text(
+                    'Log Out',
+                  ),
+                ),
+              ),
+            ),
             BottomNavigationBar(items: const [
               BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
               BottomNavigationBarItem(

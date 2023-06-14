@@ -18,6 +18,13 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   String email = '';
   String password = '';
+  bool _isAmplifyConfigured = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _configureAmplify();
+  }
 
   // Amplify Configuration
   Future<void> _configureAmplify() async {
@@ -26,19 +33,22 @@ class _LoginState extends State<Login> {
       await Amplify.addPlugin(auth);
 
       await Amplify.configure(amplifyconfig);
+      setState(() => _isAmplifyConfigured = true);
     } catch (e) {
-      print('Could not configure Amplify');
+      print('Could not configure Amplify: $e');
     }
   }
 
   // Sign Up
   Future<void> _signUp() async {
     try {
+      print("SIGNING USER UP");
       final userAttributes = {AuthUserAttributeKey.email: email};
       final res = await Amplify.Auth.signUp(
           username: email,
           password: password,
           options: SignUpOptions(userAttributes: userAttributes));
+      print("SUCCESS");
       print(res);
       await _confirmSignUp(res);
     } on AuthException catch (e) {
@@ -59,6 +69,20 @@ class _LoginState extends State<Login> {
     }
   }
 
+  // confirm user
+  Future<void> confirmUser(
+    String email,
+    String confirmationCode,
+  ) async {
+    try {
+      final res = await Amplify.Auth.confirmSignUp(
+          username: email, confirmationCode: confirmationCode);
+      print(res);
+    } on AuthException catch (e) {
+      print(e.message);
+    }
+  }
+
   // Handle Code Delivery
   void _handleCodeDelivery(AuthCodeDeliveryDetails codeDeliveryDetails) async {
     print('Code sent to ${codeDeliveryDetails.destination}');
@@ -74,6 +98,8 @@ class _LoginState extends State<Login> {
       print(e.message);
     }
   }
+
+  // LOGIN PAGE
 
   @override
   Widget build(BuildContext context) {
@@ -115,37 +141,54 @@ class _LoginState extends State<Login> {
                         hintText: 'Enter your password'),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (email == 'admin' && password == 'admin') {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const MyApp()));
-                      } else {
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: const Text('Error'),
-                                content: const Text(
-                                    'Email or password is incorrect'),
-                                actions: [
-                                  TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: const Text('Close'))
-                                ],
-                              );
-                            });
-                      }
-                    },
-                    child: const Text('Login'),
+                Center(
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (email == 'admin' && password == 'admin') {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const MyApp()));
+                            } else {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text('Error'),
+                                      content: const Text(
+                                          'Email or password is incorrect'),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text('Close'))
+                                      ],
+                                    );
+                                  });
+                            }
+                          },
+                          child: const Text('Login'),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            // _configureAmplify();
+                            _signUp();
+                          },
+                          child: const Text('Sign Up'),
+                        ),
+                      ),
+                    ],
                   ),
-                )
+                ),
+                // add a sign up button
               ],
             ))
           ])),

@@ -288,39 +288,36 @@ class _MyAppState extends State<MyApp> {
                     child: const Icon(Icons.storm_outlined),
                   )),
                 )),
-            Align(
-                alignment: Alignment.topLeft,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text('Logout'),
-                )),
             // sign out button
             Align(
               alignment: Alignment.topRight,
               child: Padding(
-                padding: const EdgeInsets.all(100.0),
-                child: FloatingActionButton(
+                padding: const EdgeInsets.all(20.0),
+                child: ElevatedButton(
                   onPressed: () {
                     _signOut();
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => const Login()));
                   },
-                  backgroundColor: Colors.red,
+                  // backgroundColor: Colors.red,
+                  // change color of the button to red
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.red),
+                  ),
                   child: const Text(
                     'Log Out',
                   ),
                 ),
               ),
             ),
-            BottomNavigationBar(items: const [
-              BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.search), label: 'Search'),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.person), label: 'Profile')
-            ])
+            // BottomNavigationBar(items: const [
+            //   BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+            //   BottomNavigationBarItem(
+            //       icon: Icon(Icons.search), label: 'Search'),
+            //   BottomNavigationBarItem(
+            //       icon: Icon(Icons.person), label: 'Profile')
+            // ])
           ])),
     );
   }

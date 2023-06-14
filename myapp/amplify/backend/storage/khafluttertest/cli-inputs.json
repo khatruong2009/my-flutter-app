@@ -1,0 +1,14 @@
+{
+  "resourceName": "khafluttertest",
+  "policyUUID": "bd535a4f",
+  "bucketName": "files",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}

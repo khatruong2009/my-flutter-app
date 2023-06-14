@@ -16,8 +16,19 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  String username = '';
+  String email = '';
   String password = '';
+
+  Future<void> _configureAmplify() async {
+    try {
+      final auth = AmplifyAuthCognito();
+      await Amplify.addPlugin(auth);
+
+      await Amplify.configure(amplifyconfig);
+    } catch (e) {
+      print('Could not configure Amplify');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,12 +50,12 @@ class _LoginState extends State<Login> {
                   padding: const EdgeInsets.all(20.0),
                   child: TextField(
                     onChanged: (text) {
-                      username = text;
+                      email = text;
                     },
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(),
-                        labelText: 'Username',
-                        hintText: 'Enter your username'),
+                        labelText: 'Email',
+                        hintText: 'Enter your email'),
                   ),
                 ),
                 Padding(
@@ -63,7 +74,7 @@ class _LoginState extends State<Login> {
                   padding: const EdgeInsets.all(20.0),
                   child: ElevatedButton(
                     onPressed: () {
-                      if (username == 'admin' && password == 'admin') {
+                      if (email == 'admin' && password == 'admin') {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -75,7 +86,7 @@ class _LoginState extends State<Login> {
                               return AlertDialog(
                                 title: const Text('Error'),
                                 content: const Text(
-                                    'Username or password is incorrect'),
+                                    'Email or password is incorrect'),
                                 actions: [
                                   TextButton(
                                       onPressed: () {

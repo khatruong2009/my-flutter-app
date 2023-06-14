@@ -1,10 +1,10 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "myfluttertestapp9722bbb7_identitypool_9722bbb7",
+    "identityPoolName": "myflutterapp6f6e7429_identitypool_6f6e7429",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "myflut9722bbb7",
-    "userPoolName": "myfluttertestapp9722bbb7_userpool_9722bbb7",
+    "resourceNameTruncated": "myflut6f6e7429",
+    "userPoolName": "myflutterapp6f6e7429_userpool_6f6e7429",
     "autoVerifiedAttributes": [
       "email"
     ],
@@ -31,10 +31,10 @@
     "userpoolClientReadAttributes": [
       "email"
     ],
-    "userpoolClientLambdaRole": "myflut9722bbb7_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "myflut6f6e7429_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "9722bbb7",
-    "resourceName": "myfluttertestapp9722bbb7",
+    "sharedId": "6f6e7429",
+    "resourceName": "myflutterapp6f6e7429",
     "authSelections": "identityPoolAndUserPool",
     "useDefault": "default",
     "usernameAttributes": [

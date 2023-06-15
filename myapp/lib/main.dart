@@ -453,21 +453,21 @@ class _MyAppState extends State<MyApp> {
                 ),
               ),
             ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: (FloatingActionButton(
-                  onPressed: () {
-                    setState(() {
-                      count++;
-                    });
-                    print('Count going up');
-                  },
-                  child: const Icon(Icons.add),
-                )),
-              ),
-            ),
+            // Align(
+            //   alignment: Alignment.bottomRight,
+            //   child: Padding(
+            //     padding: const EdgeInsets.all(20.0),
+            //     child: (FloatingActionButton(
+            //       onPressed: () {
+            //         setState(() {
+            //           count++;
+            //         });
+            //         print('Count going up');
+            //       },
+            //       child: const Icon(Icons.add),
+            //     )),
+            //   ),
+            // ),
             Align(
                 alignment: Alignment.bottomLeft,
                 child: Padding(
@@ -479,26 +479,26 @@ class _MyAppState extends State<MyApp> {
                         print('List Refreshed');
                       });
                     },
-                    backgroundColor: Colors.red,
+                    backgroundColor: Colors.green,
                     child: const Icon(Icons.refresh),
                   )),
                 )),
-            Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: (FloatingActionButton(
-                    onPressed: () {
-                      // setState(() {
-                      //   count = count * count;
-                      // });
-                      listAllWithGuestAccessLevel();
-                      print('Count squared');
-                    },
-                    backgroundColor: Colors.green[800],
-                    child: const Icon(Icons.storm_outlined),
-                  )),
-                )),
+            // Align(
+            //     alignment: Alignment.bottomCenter,
+            //     child: Padding(
+            //       padding: const EdgeInsets.all(20),
+            //       child: (FloatingActionButton(
+            //         onPressed: () {
+            //           // setState(() {
+            //           //   count = count * count;
+            //           // });
+            //           listAllWithGuestAccessLevel();
+            //           print('Count squared');
+            //         },
+            //         backgroundColor: Colors.green[800],
+            //         child: const Icon(Icons.storm_outlined),
+            //       )),
+            //     )),
             // sign out button
             Align(
               alignment: Alignment.topRight,

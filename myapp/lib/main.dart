@@ -386,6 +386,25 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  // delete file
+  Future<void> removeFile({
+    required String key,
+    required StorageAccessLevel,
+  }) async {
+    try {
+      final result = await Amplify.Storage.remove(
+        key: key,
+        options: StorageRemoveOptions(
+          accessLevel: StorageAccessLevel,
+        ),
+      ).result;
+      print('File removed');
+    } on StorageException catch (e) {
+      print(e.message);
+      rethrow;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -412,6 +431,18 @@ class _MyAppState extends State<MyApp> {
                           icon: const Icon(Icons.download),
                           onPressed: () {
                             downloadFile(item.key);
+                          },
+                        ),
+                        leading: IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () {
+                            removeFile(
+                              key: item.key,
+                              StorageAccessLevel: StorageAccessLevel.guest,
+                            );
+                            setState(() {
+                              listAllWithGuestAccessLevel();
+                            });
                           },
                         ),
                       )

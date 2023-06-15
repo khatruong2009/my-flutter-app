@@ -3,9 +3,8 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_authenticator/amplify_authenticator.dart';
 import 'package:amplify_storage_s3/amplify_storage_s3.dart';
-import 'dart:io' as io;
-import 'package:aws_common/vm.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'amplifyconfiguration.dart';
 
@@ -356,6 +355,24 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  // download file
+  Future<void> downloadToLocalFile(String key) async {
+    final documentsDir = await getApplicationDocumentsDirectory();
+    final filepath = documentsDir.path + '/' + key;
+    try {
+      final result = await Amplify.Storage.downloadFile(
+        key: key,
+        localFile: AWSFile.fromPath(filepath),
+        onProgress: (p0) {
+          print('Progress: ${p0.transferredBytes} / ${p0.totalBytes} %)');
+        },
+      ).result;
+    } on StorageException catch (e) {
+      print(e.message);
+      rethrow;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -378,6 +395,12 @@ class _MyAppState extends State<MyApp> {
                       ListTile(
                         title: Text(item.key),
                         subtitle: Text(item.lastModified.toString()),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.download),
+                          onPressed: () {
+                            downloadToLocalFile(item.key);
+                          },
+                        ),
                       )
                   ],
                 ),
@@ -419,9 +442,10 @@ class _MyAppState extends State<MyApp> {
                   padding: const EdgeInsets.all(20),
                   child: (FloatingActionButton(
                     onPressed: () {
-                      setState(() {
-                        count = count * count;
-                      });
+                      // setState(() {
+                      //   count = count * count;
+                      // });
+                      listAllWithGuestAccessLevel();
                       print('Count squared');
                     },
                     backgroundColor: Colors.green[800],

@@ -163,8 +163,8 @@ class _LoginState extends State<Login> {
   //                             print("DID LOGIN SUCCEED?");
   //                             print(loggedIn);
 
-  //                             // make sure sign in worked
-  //                             if (Amplify.Auth.getCurrentUser() != null) {
+  //                             // only go to next page if sign in worked
+  //                             if (loggedIn == true) {
   //                               Navigator.push(
   //                                   context,
   //                                   MaterialPageRoute(

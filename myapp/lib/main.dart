@@ -427,11 +427,13 @@ class _MyAppState extends State<MyApp> {
                       ListTile(
                         title: Text(item.key),
                         subtitle: Text(item.lastModified.toString()),
+                        hoverColor: Colors.blue,
                         trailing: IconButton(
                           icon: const Icon(Icons.download),
                           onPressed: () {
                             downloadFile(item.key);
                           },
+                          color: Colors.grey[700],
                         ),
                         leading: IconButton(
                           icon: const Icon(Icons.delete),
@@ -444,6 +446,7 @@ class _MyAppState extends State<MyApp> {
                               listAllWithGuestAccessLevel();
                             });
                           },
+                          color: Colors.red,
                         ),
                       )
                   ],

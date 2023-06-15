@@ -370,14 +370,17 @@ class _MyAppState extends State<MyApp> {
             ),
             // Center(child: Text('$count', style: const TextStyle(fontSize: 50))),
             Center(
-              child: ListView(
-                children: [
-                  for (var item in list)
-                    ListTile(
-                      title: Text(item.key),
-                      subtitle: Text(item.lastModified.toString()),
-                    )
-                ],
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 50),
+                child: ListView(
+                  children: [
+                    for (var item in list)
+                      ListTile(
+                        title: Text(item.key),
+                        subtitle: Text(item.lastModified.toString()),
+                      )
+                  ],
+                ),
               ),
             ),
             Align(

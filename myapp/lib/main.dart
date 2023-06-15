@@ -355,7 +355,7 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  // download file
+  // download file on mobile
   Future<void> downloadToLocalFile(String key) async {
     final documentsDir = await getApplicationDocumentsDirectory();
     final filepath = documentsDir.path + '/' + key;
@@ -367,6 +367,19 @@ class _MyAppState extends State<MyApp> {
           print('Progress: ${p0.transferredBytes} / ${p0.totalBytes} %)');
         },
       ).result;
+    } on StorageException catch (e) {
+      print(e.message);
+      rethrow;
+    }
+  }
+
+  // download file on web
+  Future<void> downloadFile(String key) async {
+    try {
+      final result = await Amplify.Storage.downloadFile(
+              key: key, localFile: AWSFile.fromPath(key))
+          .result;
+      print('File downloaded');
     } on StorageException catch (e) {
       print(e.message);
       rethrow;
@@ -398,7 +411,7 @@ class _MyAppState extends State<MyApp> {
                         trailing: IconButton(
                           icon: const Icon(Icons.download),
                           onPressed: () {
-                            downloadToLocalFile(item.key);
+                            downloadFile(item.key);
                           },
                         ),
                       )
@@ -428,8 +441,8 @@ class _MyAppState extends State<MyApp> {
                   child: (FloatingActionButton(
                     onPressed: () {
                       setState(() {
-                        count = 0;
-                        print('Count reset');
+                        listAllWithGuestAccessLevel();
+                        print('List Refreshed');
                       });
                     },
                     backgroundColor: Colors.red,

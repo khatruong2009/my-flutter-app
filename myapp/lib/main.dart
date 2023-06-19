@@ -6,6 +6,7 @@ import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:amplify_analytics_pinpoint/amplify_analytics_pinpoint.dart';
+import 'dart:io' show Platform;
 
 import 'amplifyconfiguration.dart';
 
@@ -418,6 +419,17 @@ class _MyAppState extends State<MyApp> {
     Amplify.Analytics.recordEvent(event: event);
   }
 
+  // record download event
+  Future<void> recordDownloadEvent() async {
+    final event = AnalyticsEvent('download');
+
+    event.customProperties
+      ..addStringProperty('username', 'file downloaded')
+      ..addBoolProperty('Successful', true);
+
+    Amplify.Analytics.recordEvent(event: event);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -457,7 +469,14 @@ class _MyAppState extends State<MyApp> {
                                 trailing: IconButton(
                                   icon: const Icon(Icons.download),
                                   onPressed: () {
-                                    downloadFile(item.key);
+                                    if (Platform.isAndroid || Platform.isIOS) {
+                                      downloadToLocalFile(item.key);
+                                    } else if (Platform.isWindows ||
+                                        Platform.isMacOS ||
+                                        Platform.isLinux) {
+                                      downloadFile(item.key);
+                                    }
+                                    recordDownloadEvent();
                                   },
                                   color: Colors.grey[700],
                                 ),

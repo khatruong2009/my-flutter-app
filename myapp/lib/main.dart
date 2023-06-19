@@ -5,6 +5,7 @@ import 'package:amplify_authenticator/amplify_authenticator.dart';
 import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:amplify_analytics_pinpoint/amplify_analytics_pinpoint.dart';
 
 import 'amplifyconfiguration.dart';
 
@@ -35,7 +36,8 @@ class _LoginState extends State<Login> {
     try {
       final auth = AmplifyAuthCognito();
       final storage = AmplifyStorageS3();
-      await Amplify.addPlugins([auth, storage]);
+      final analytics = AmplifyAnalyticsPinpoint();
+      await Amplify.addPlugins([auth, storage, analytics]);
 
       await Amplify.configure(amplifyconfig);
       setState(() => _isAmplifyConfigured = true);
@@ -405,6 +407,17 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  // record upload event
+  Future<void> recordUploadEvent() async {
+    final event = AnalyticsEvent('upload');
+
+    event.customProperties
+      ..addStringProperty('username', 'file uploaded')
+      ..addBoolProperty('Successful', true);
+
+    Amplify.Analytics.recordEvent(event: event);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -525,6 +538,7 @@ class _MyAppState extends State<MyApp> {
                     //   ),
                     // )
                   ]),
+                  // UPLOAD PAGE
                   Scaffold(
                     body: Center(
                       child: Column(
@@ -533,6 +547,7 @@ class _MyAppState extends State<MyApp> {
                           ElevatedButton(
                             onPressed: () {
                               uploadFile();
+                              recordUploadEvent();
                             },
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all<Color>(

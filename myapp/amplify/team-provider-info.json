@@ -13,7 +13,8 @@
     },
     "categories": {
       "auth": {
-        "myflutterapp6f6e7429": {}
+        "myflutterapp6f6e7429": {},
+        "userPoolGroups": {}
       },
       "storage": {
         "khafluttertest": {}

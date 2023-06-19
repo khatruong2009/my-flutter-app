@@ -445,7 +445,7 @@ class _MyAppState extends State<MyApp> {
                   tabs: [
                     Tab(icon: Icon(Icons.home)),
                     Tab(icon: Icon(Icons.upload_file)),
-                    Tab(icon: Icon(Icons.download)),
+                    Tab(icon: Icon(Icons.airplane_ticket_outlined)),
                   ],
                 ),
               ),
@@ -580,6 +580,26 @@ class _MyAppState extends State<MyApp> {
                       ),
                     ),
                   ),
+                  // API PAGE
+                  Scaffold(
+                    body: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {},
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.green[800]!),
+                            ),
+                            child: const Text(
+                              'API',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
                 ],
               ),
             )));

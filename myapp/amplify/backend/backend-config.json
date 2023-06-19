@@ -1,4 +1,10 @@
 {
+  "analytics": {
+    "myflutterapp": {
+      "providerPlugin": "awscloudformation",
+      "service": "Pinpoint"
+    }
+  },
   "auth": {
     "myflutterapp6f6e7429": {
       "customAuth": false,

@@ -1,0 +1,21 @@
+{
+    "appName": "myflutterapp",
+    "roleName": "pinpointLambdaRole756c2618",
+    "cloudformationPolicyName": "cloudformationPolicy756c2618",
+    "cloudWatchPolicyName": "cloudWatchPolicy756c2618",
+    "pinpointPolicyName": "pinpointPolicy756c2618",
+    "authPolicyName": "pinpoint_amplify_756c2618",
+    "unauthPolicyName": "pinpoint_amplify_756c2618",
+    "authRoleName": {
+        "Ref": "AuthRoleName"
+    },
+    "unauthRoleName": {
+        "Ref": "UnauthRoleName"
+    },
+    "authRoleArn": {
+        "Fn::GetAtt": [
+            "AuthRole",
+            "Arn"
+        ]
+    }
+}

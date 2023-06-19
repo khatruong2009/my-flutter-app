@@ -408,146 +408,146 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-          appBar: AppBar(
-            backgroundColor: const Color.fromARGB(255, 42, 35, 235),
-            title: const Text('Kha\'s First App'),
-          ),
-          body: Stack(children: [
-            Container(
-              color: Colors.white,
-            ),
-            // Center(child: Text('$count', style: const TextStyle(fontSize: 50))),
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 50),
-                child: ListView(
-                  children: [
-                    for (var item in list)
-                      ListTile(
-                        title: Text(item.key),
-                        subtitle: Text(item.lastModified.toString()),
-                        hoverColor: Colors.blue,
-                        trailing: IconButton(
-                          icon: const Icon(Icons.download),
-                          onPressed: () {
-                            downloadFile(item.key);
-                          },
-                          color: Colors.grey[700],
-                        ),
-                        leading: IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () {
-                            removeFile(
-                              key: item.key,
-                              StorageAccessLevel: StorageAccessLevel.guest,
-                            );
-                            setState(() {
-                              listAllWithGuestAccessLevel();
-                            });
-                          },
-                          color: Colors.red,
-                        ),
-                      )
+        // TAB CONTROLLER
+        home: DefaultTabController(
+            length: 3,
+            child: Scaffold(
+              appBar: AppBar(
+                backgroundColor: const Color.fromARGB(255, 42, 35, 235),
+                title: const Text('Kha\'s First App'),
+                // TOP TAB BAR
+                bottom: const TabBar(
+                  tabs: [
+                    Tab(icon: Icon(Icons.home)),
+                    Tab(icon: Icon(Icons.upload_file)),
+                    Tab(icon: Icon(Icons.download)),
                   ],
                 ),
               ),
-            ),
-            // Align(
-            //   alignment: Alignment.bottomRight,
-            //   child: Padding(
-            //     padding: const EdgeInsets.all(20.0),
-            //     child: (FloatingActionButton(
-            //       onPressed: () {
-            //         setState(() {
-            //           count++;
-            //         });
-            //         print('Count going up');
-            //       },
-            //       child: const Icon(Icons.add),
-            //     )),
-            //   ),
-            // ),
-            Align(
-                alignment: Alignment.bottomLeft,
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: (FloatingActionButton(
-                    onPressed: () {
-                      setState(() {
-                        listAllWithGuestAccessLevel();
-                        print('List Refreshed');
-                      });
-                    },
-                    backgroundColor: Colors.green,
-                    child: const Icon(Icons.refresh),
-                  )),
-                )),
-            // Align(
-            //     alignment: Alignment.bottomCenter,
-            //     child: Padding(
-            //       padding: const EdgeInsets.all(20),
-            //       child: (FloatingActionButton(
-            //         onPressed: () {
-            //           // setState(() {
-            //           //   count = count * count;
-            //           // });
-            //           listAllWithGuestAccessLevel();
-            //           print('Count squared');
-            //         },
-            //         backgroundColor: Colors.green[800],
-            //         child: const Icon(Icons.storm_outlined),
-            //       )),
-            //     )),
-            // sign out button
-            Align(
-              alignment: Alignment.topRight,
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    _signOut();
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => const Login()));
-                  },
-                  // backgroundColor: Colors.red,
-                  // change color of the button to red
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.red),
+              body: TabBarView(
+                children: [
+                  // HOME PAGE
+                  Stack(children: [
+                    Container(
+                      color: Colors.white,
+                    ),
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 0),
+                        child: ListView(
+                          children: [
+                            for (var item in list)
+                              ListTile(
+                                title: Text(item.key),
+                                subtitle: Text(item.lastModified.toString()),
+                                hoverColor: Colors.blue,
+                                trailing: IconButton(
+                                  icon: const Icon(Icons.download),
+                                  onPressed: () {
+                                    downloadFile(item.key);
+                                  },
+                                  color: Colors.grey[700],
+                                ),
+                                leading: IconButton(
+                                  icon: const Icon(Icons.delete),
+                                  onPressed: () {
+                                    removeFile(
+                                      key: item.key,
+                                      StorageAccessLevel:
+                                          StorageAccessLevel.guest,
+                                    );
+                                    setState(() {
+                                      listAllWithGuestAccessLevel();
+                                    });
+                                  },
+                                  color: Colors.red,
+                                ),
+                              )
+                          ],
+                        ),
+                      ),
+                    ),
+                    Align(
+                        alignment: Alignment.bottomLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: (FloatingActionButton(
+                            onPressed: () {
+                              setState(() {
+                                listAllWithGuestAccessLevel();
+                                print('List Refreshed');
+                              });
+                            },
+                            backgroundColor: Colors.green,
+                            child: const Icon(Icons.refresh),
+                          )),
+                        )),
+                    // sign out button
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            _signOut();
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const Login()));
+                          },
+                          // change color of the button to red
+                          style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all<Color>(Colors.red),
+                          ),
+                          child: const Text(
+                            'Log Out',
+                          ),
+                        ),
+                      ),
+                    ),
+                    // Align(
+                    //   alignment: Alignment.topLeft,
+                    //   child: Padding(
+                    //     padding: const EdgeInsets.all(20.0),
+                    //     child: ElevatedButton(
+                    //       onPressed: () {
+                    //         uploadFile();
+                    //       },
+                    //       style: ButtonStyle(
+                    //         backgroundColor: MaterialStateProperty.all<Color>(
+                    //             Colors.green[800]!),
+                    //       ),
+                    //       child: const Text(
+                    //         'Upload',
+                    //       ),
+                    //     ),
+                    //   ),
+                    // )
+                  ]),
+                  Scaffold(
+                    body: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              uploadFile();
+                            },
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.green[800]!),
+                            ),
+                            child: const Text(
+                              'Upload',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                  child: const Text(
-                    'Log Out',
-                  ),
-                ),
+                ],
               ),
-            ),
-            Align(
-              alignment: Alignment.topLeft,
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    uploadFile();
-                  },
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.green[800]!),
-                  ),
-                  child: const Text(
-                    'Upload',
-                  ),
-                ),
-              ),
-            )
-            // BottomNavigationBar(items: const [
-            //   BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-            //   BottomNavigationBarItem(
-            //       icon: Icon(Icons.search), label: 'Search'),
-            //   BottomNavigationBarItem(
-            //       icon: Icon(Icons.person), label: 'Profile')
-            // ])
-          ])),
-    );
+            )));
   }
 }

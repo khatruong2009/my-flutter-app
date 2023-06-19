@@ -17,6 +17,9 @@
       },
       "storage": {
         "khafluttertest": {}
+      },
+      "analytics": {
+        "myflutterapp": {}
       }
     }
   }

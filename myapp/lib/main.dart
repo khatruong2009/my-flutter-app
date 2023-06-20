@@ -8,6 +8,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:amplify_analytics_pinpoint/amplify_analytics_pinpoint.dart';
 import 'dart:io' show Platform;
 
+import 'package:amplify_datastore/amplify_datastore.dart';
+import 'models/ModelProvider.dart';
+
 import 'amplifyconfiguration.dart';
 
 void main() {
@@ -38,9 +41,17 @@ class _LoginState extends State<Login> {
       final auth = AmplifyAuthCognito();
       final storage = AmplifyStorageS3();
       final analytics = AmplifyAnalyticsPinpoint();
-      await Amplify.addPlugins([auth, storage, analytics]);
+      final dataStorePlugin =
+          AmplifyDataStore(modelProvider: ModelProvider.instance);
+      await Amplify.addPlugins([auth, storage, analytics, dataStorePlugin]);
 
-      await Amplify.configure(amplifyconfig);
+      try {
+        await Amplify.configure(amplifyconfig);
+      } on AmplifyAlreadyConfiguredException {
+        print(
+            'Tried to reconfigure Amplify; this can occur when your app restarts on Android.');
+      }
+
       setState(() => _isAmplifyConfigured = true);
     } catch (e) {
       print('Could not configure Amplify: $e');
@@ -430,6 +441,28 @@ class _MyAppState extends State<MyApp> {
     Amplify.Analytics.recordEvent(event: event);
   }
 
+  Future<void> saveToDo() async {
+    final item = Todo(
+      name: 'My first todo',
+      description: 'Learn how to use Amplify DataStore.',
+    );
+
+    try {
+      await Amplify.DataStore.save(item);
+    } on DataStoreException catch (e) {
+      print(e.message);
+    }
+  }
+
+  Future<void> readToDo() async {
+    try {
+      final items = await Amplify.DataStore.query(Todo.classType);
+      print(items);
+    } on DataStoreException catch (e) {
+      print(e.message);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -587,7 +620,9 @@ class _MyAppState extends State<MyApp> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              saveToDo();
+                            },
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all<Color>(
                                   Colors.green[800]!),

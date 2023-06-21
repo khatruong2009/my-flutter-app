@@ -631,6 +631,18 @@ class _MyAppState extends State<MyApp> {
                               'API',
                             ),
                           ),
+                          ElevatedButton(
+                            onPressed: () {
+                              readToDo();
+                            },
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.green[800]!),
+                            ),
+                            child: const Text(
+                              'Read',
+                            ),
+                          ),
                         ],
                       ),
                     ),

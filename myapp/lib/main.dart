@@ -252,6 +252,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Authenticator(
         child: MaterialApp(
+            debugShowCheckedModeBanner: false,
             builder: Authenticator.builder(),
             home: MyApp(),
             theme: ThemeData(
@@ -463,192 +464,220 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  int _selectedIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        // TAB CONTROLLER
-        home: DefaultTabController(
-            length: 3,
-            child: Scaffold(
-              appBar: AppBar(
-                backgroundColor: const Color.fromARGB(255, 42, 35, 235),
-                title: const Text('Kha\'s First App'),
-                // TOP TAB BAR
-                bottom: const TabBar(
-                  tabs: [
-                    Tab(icon: Icon(Icons.home)),
-                    Tab(icon: Icon(Icons.upload_file)),
-                    Tab(icon: Icon(Icons.airplane_ticket_outlined)),
-                  ],
+      debugShowCheckedModeBanner: false,
+      // TAB CONTROLLER
+      home: DefaultTabController(
+        length: 3,
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: const Color.fromARGB(255, 42, 35, 235),
+            title: const Text('Kha\'s First App'),
+            // TOP TAB BAR
+            bottom: const TabBar(
+              tabs: [
+                Tab(icon: Icon(Icons.home)),
+                Tab(icon: Icon(Icons.upload_file)),
+                Tab(icon: Icon(Icons.airplane_ticket_outlined)),
+              ],
+            ),
+          ),
+          body: TabBarView(
+            children: [
+              // HOME PAGE
+              Stack(children: [
+                Container(
+                  color: Colors.white,
                 ),
-              ),
-              body: TabBarView(
-                children: [
-                  // HOME PAGE
-                  Stack(children: [
-                    Container(
-                      color: Colors.white,
-                    ),
-                    Center(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 0),
-                        child: ListView(
-                          children: [
-                            for (var item in list)
-                              ListTile(
-                                title: Text(item.key),
-                                subtitle: Text(item.lastModified.toString()),
-                                hoverColor: Colors.blue,
-                                trailing: IconButton(
-                                  icon: const Icon(Icons.download),
-                                  onPressed: () {
-                                    if (Platform.isAndroid || Platform.isIOS) {
-                                      downloadToLocalFile(item.key);
-                                    } else if (Platform.isWindows ||
-                                        Platform.isMacOS ||
-                                        Platform.isLinux) {
-                                      downloadFile(item.key);
-                                    }
-                                    recordDownloadEvent();
-                                  },
-                                  color: Colors.grey[700],
-                                ),
-                                leading: IconButton(
-                                  icon: const Icon(Icons.delete),
-                                  onPressed: () {
-                                    removeFile(
-                                      key: item.key,
-                                      StorageAccessLevel:
-                                          StorageAccessLevel.guest,
-                                    );
-                                    setState(() {
-                                      listAllWithGuestAccessLevel();
-                                    });
-                                  },
-                                  color: Colors.red,
-                                ),
-                              )
-                          ],
-                        ),
-                      ),
-                    ),
-                    Align(
-                        alignment: Alignment.bottomLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: (FloatingActionButton(
-                            onPressed: () {
-                              setState(() {
-                                listAllWithGuestAccessLevel();
-                                print('List Refreshed');
-                              });
-                            },
-                            backgroundColor: Colors.green,
-                            child: const Icon(Icons.refresh),
-                          )),
-                        )),
-                    // sign out button
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            _signOut();
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const Login()));
-                          },
-                          // change color of the button to red
-                          style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all<Color>(Colors.red),
-                          ),
-                          child: const Text(
-                            'Log Out',
-                          ),
-                        ),
-                      ),
-                    ),
-                    // Align(
-                    //   alignment: Alignment.topLeft,
-                    //   child: Padding(
-                    //     padding: const EdgeInsets.all(20.0),
-                    //     child: ElevatedButton(
-                    //       onPressed: () {
-                    //         uploadFile();
-                    //       },
-                    //       style: ButtonStyle(
-                    //         backgroundColor: MaterialStateProperty.all<Color>(
-                    //             Colors.green[800]!),
-                    //       ),
-                    //       child: const Text(
-                    //         'Upload',
-                    //       ),
-                    //     ),
-                    //   ),
-                    // )
-                  ]),
-                  // UPLOAD PAGE
-                  Scaffold(
-                    body: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              uploadFile();
-                              recordUploadEvent();
-                            },
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.green[800]!),
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 0),
+                    child: ListView(
+                      children: [
+                        for (var item in list)
+                          ListTile(
+                            title: Text(item.key),
+                            subtitle: Text(item.lastModified.toString()),
+                            hoverColor: Colors.blue,
+                            trailing: IconButton(
+                              icon: const Icon(Icons.download),
+                              onPressed: () {
+                                if (Platform.isAndroid || Platform.isIOS) {
+                                  downloadToLocalFile(item.key);
+                                } else if (Platform.isWindows ||
+                                    Platform.isMacOS ||
+                                    Platform.isLinux) {
+                                  downloadFile(item.key);
+                                }
+                                recordDownloadEvent();
+                              },
+                              color: Colors.grey[700],
                             ),
-                            child: const Text(
-                              'Upload',
+                            leading: IconButton(
+                              icon: const Icon(Icons.delete),
+                              onPressed: () {
+                                removeFile(
+                                  key: item.key,
+                                  StorageAccessLevel: StorageAccessLevel.guest,
+                                );
+                                setState(() {
+                                  listAllWithGuestAccessLevel();
+                                });
+                              },
+                              color: Colors.red,
                             ),
-                          ),
-                        ],
+                          )
+                      ],
+                    ),
+                  ),
+                ),
+                Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: (FloatingActionButton(
+                        onPressed: () {
+                          setState(() {
+                            listAllWithGuestAccessLevel();
+                            print('List Refreshed');
+                          });
+                        },
+                        backgroundColor: Colors.green,
+                        child: const Icon(Icons.refresh),
+                      )),
+                    )),
+                // sign out button
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _signOut();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Login()));
+                      },
+                      // change color of the button to red
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.red),
+                      ),
+                      child: const Text(
+                        'Log Out',
                       ),
                     ),
                   ),
-                  // API PAGE
-                  Scaffold(
-                    body: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              saveToDo();
-                            },
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.green[800]!),
-                            ),
-                            child: const Text(
-                              'API',
-                            ),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              readToDo();
-                            },
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.green[800]!),
-                            ),
-                            child: const Text(
-                              'Read',
-                            ),
-                          ),
-                        ],
+                ),
+                // Align(
+                //   alignment: Alignment.topLeft,
+                //   child: Padding(
+                //     padding: const EdgeInsets.all(20.0),
+                //     child: ElevatedButton(
+                //       onPressed: () {
+                //         uploadFile();
+                //       },
+                //       style: ButtonStyle(
+                //         backgroundColor: MaterialStateProperty.all<Color>(
+                //             Colors.green[800]!),
+                //       ),
+                //       child: const Text(
+                //         'Upload',
+                //       ),
+                //     ),
+                //   ),
+                // )
+              ]),
+              // UPLOAD PAGE
+              Scaffold(
+                body: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          uploadFile();
+                          recordUploadEvent();
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Colors.green[800]!),
+                        ),
+                        child: const Text(
+                          'Upload',
+                        ),
                       ),
-                    ),
-                  )
-                ],
+                    ],
+                  ),
+                ),
               ),
-            )));
+              // API PAGE
+              Scaffold(
+                body: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          saveToDo();
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Colors.green[800]!),
+                        ),
+                        child: const Text(
+                          'API',
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          readToDo();
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Colors.green[800]!),
+                        ),
+                        child: const Text(
+                          'Read',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
+          // bottomNavigationBar:
+          //     // BOTTOM NAVIGATION BAR,
+          //     BottomNavigationBar(
+          //   currentIndex: _selectedIndex,
+          //   onTap: (index) {
+          //     setState(() {
+          //       _selectedIndex = index;
+          //     });
+          //   },
+          //   items: const [
+          //     BottomNavigationBarItem(
+          //       icon: Icon(Icons.home),
+          //       label: 'Home',
+          //     ),
+          //     BottomNavigationBarItem(
+          //       icon: Icon(Icons.upload_file),
+          //       label: 'Upload',
+          //     ),
+          //     BottomNavigationBarItem(
+          //       icon: Icon(Icons.airplane_ticket_outlined),
+          //       label: 'API',
+          //     ),
+          //   ],
+          // ),
+        ),
+      ),
+    );
   }
 }

@@ -6,6 +6,20 @@
     }
   },
   "api": {
+    "flutterrestapi": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "myflutterapp02108a9f"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    },
     "myflutterapp": {
       "dependsOn": [],
       "output": {
@@ -65,6 +79,31 @@
       ],
       "providerPlugin": "awscloudformation",
       "service": "Cognito-UserPool-Groups"
+    }
+  },
+  "function": {
+    "myflutterapp02108a9f": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_myflutterapp02108a9f_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "myflutterapp02108a9f"
+        }
+      ]
+    },
+    "AMPLIFY_function_myflutterapp02108a9f_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "myflutterapp02108a9f"
+        }
+      ]
     }
   },
   "storage": {

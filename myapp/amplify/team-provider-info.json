@@ -23,7 +23,14 @@
         "myflutterapp": {}
       },
       "api": {
-        "myflutterapp": {}
+        "myflutterapp": {},
+        "flutterrestapi": {}
+      },
+      "function": {
+        "myflutterapp02108a9f": {
+          "deploymentBucketName": "amplify-myflutterapp-dev-92322-deployment",
+          "s3Key": "amplify-builds/myflutterapp02108a9f-454c2b54484969673239-build.zip"
+        }
       }
     }
   }

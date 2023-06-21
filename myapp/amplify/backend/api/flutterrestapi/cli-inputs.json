@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "paths": {
+    "/todo": {
+      "name": "/todo",
+      "lambdaFunction": "myflutterapp02108a9f",
+      "permissions": {
+        "setting": "open"
+      }
+    }
+  }
+}

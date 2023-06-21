@@ -7,6 +7,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:amplify_analytics_pinpoint/amplify_analytics_pinpoint.dart';
 import 'dart:io' show Platform;
+import 'package:amplify_api/amplify_api.dart';
 
 import 'package:amplify_datastore/amplify_datastore.dart';
 import 'models/ModelProvider.dart';
@@ -41,9 +42,12 @@ class _LoginState extends State<Login> {
       final auth = AmplifyAuthCognito();
       final storage = AmplifyStorageS3();
       final analytics = AmplifyAnalyticsPinpoint();
+      final api = AmplifyAPI();
       final dataStorePlugin =
           AmplifyDataStore(modelProvider: ModelProvider.instance);
-      await Amplify.addPlugins([auth, storage, analytics, dataStorePlugin]);
+      await Amplify.addPlugins(
+        [auth, storage, analytics, dataStorePlugin, api],
+      );
 
       try {
         await Amplify.configure(amplifyconfig);
@@ -442,6 +446,8 @@ class _MyAppState extends State<MyApp> {
     Amplify.Analytics.recordEvent(event: event);
   }
 
+  // DATASTORE FUNCTIONS
+
   Future<void> saveToDo() async {
     final item = Todo(
       name: 'My first todo',
@@ -460,6 +466,38 @@ class _MyAppState extends State<MyApp> {
       final items = await Amplify.DataStore.query(Todo.classType);
       print(items);
     } on DataStoreException catch (e) {
+      print(e.message);
+    }
+  }
+
+  // REST API FUNCTIONS
+
+  Future<void> postToDo() async {
+    try {
+      final restOperation = Amplify.API.post(
+        'todo',
+        body: HttpPayload.json({
+          'name': 'My first todo',
+          'description': 'Learn how to use Amplify DataStore.'
+        }),
+      );
+      final response = await restOperation.response;
+      print("POST CALL SUCCESSFUL");
+      print(response.decodeBody());
+    } on ApiException catch (e) {
+      print(e.message);
+    }
+  }
+
+  Future<void> getToDo() async {
+    try {
+      final restOperation = Amplify.API.get(
+        'todo',
+      );
+      final response = await restOperation.response;
+      print("GET CALL SUCCESSFUL");
+      print(response.decodeBody());
+    } on ApiException catch (e) {
       print(e.message);
     }
   }
@@ -628,7 +666,7 @@ class _MyAppState extends State<MyApp> {
                         },
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(
-                              Colors.green[800]!),
+                              Colors.green[400]!),
                         ),
                         child: const Text(
                           'API',
@@ -640,10 +678,34 @@ class _MyAppState extends State<MyApp> {
                         },
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(
-                              Colors.green[800]!),
+                              Colors.green[600]!),
                         ),
                         child: const Text(
                           'Read',
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          postToDo();
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Colors.green[800]!),
+                        ),
+                        child: const Text(
+                          'Post Rest API',
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          getToDo();
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Colors.green[900]!),
+                        ),
+                        child: const Text(
+                          'Get Rest API',
                         ),
                       ),
                     ],

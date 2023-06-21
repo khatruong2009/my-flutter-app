@@ -7,6 +7,11 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "api": {
+    "flutterrestapi": {
+      "ApiId": "string",
+      "ApiName": "string",
+      "RootUrl": "string"
+    },
     "myflutterapp": {
       "GraphQLAPIEndpointOutput": "string",
       "GraphQLAPIIdOutput": "string",
@@ -25,6 +30,15 @@ export type AmplifyDependentResourcesAttributes = {
     },
     "userPoolGroups": {
       "test1GroupRole": "string"
+    }
+  },
+  "function": {
+    "myflutterapp02108a9f": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
     }
   },
   "storage": {

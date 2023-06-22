@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
@@ -30,6 +32,10 @@ class _LoginState extends State<Login> {
   String password = '';
   bool _isAmplifyConfigured = false;
 
+  StreamSubscription<HubEvent>? stream;
+
+  bool networkIsUp = false;
+
   @override
   void initState() {
     super.initState();
@@ -61,6 +67,18 @@ class _LoginState extends State<Login> {
       print('Could not configure Amplify: $e');
     }
   }
+
+  // listen to amplify events
+  // void observeEvents() {
+  //   stream = Amplify.Hub.listen([HubChannel.DataStore], (hubEvent) {
+  //     if (hubEvent.eventName == 'networkStatus') {
+  //       setState(() {
+  //         final status = hubEvent.payload as NetworkStatusEvent?;
+  //         networkIsUp = status?.active ?? false;
+  //       });
+  //     }
+  //   });
+  // }
 
   // Sign Up
   Future<void> _signUp() async {
@@ -456,6 +474,7 @@ class _MyAppState extends State<MyApp> {
 
     try {
       await Amplify.DataStore.save(item);
+      print('Saved item: $item');
     } on DataStoreException catch (e) {
       print(e.message);
     }

@@ -346,6 +346,7 @@ class _MyAppState extends State<MyApp> {
             print('Progress: ${p0.transferredBytes} / ${p0.totalBytes} %)'),
       ).result;
       listAllWithGuestAccessLevel();
+      recordUploadEvent();
     } on StorageException catch (e) {
       print(e.message);
       rethrow;
@@ -413,6 +414,7 @@ class _MyAppState extends State<MyApp> {
         },
       ).result;
       listAllWithGuestAccessLevel();
+      recordDownloadEvent();
     } on StorageException catch (e) {
       print(e.message);
       rethrow;
@@ -426,6 +428,7 @@ class _MyAppState extends State<MyApp> {
               key: key, localFile: AWSFile.fromPath(key))
           .result;
       print('File downloaded');
+      recordDownloadEvent();
       listAllWithGuestAccessLevel();
     } on StorageException catch (e) {
       print(e.message);
@@ -446,6 +449,7 @@ class _MyAppState extends State<MyApp> {
         ),
       ).result;
       listAllWithGuestAccessLevel();
+      recordDeleteEvent();
       print('File removed');
     } on StorageException catch (e) {
       print(e.message);
@@ -475,6 +479,39 @@ class _MyAppState extends State<MyApp> {
     Amplify.Analytics.recordEvent(event: event);
   }
 
+  // record delete event
+  Future<void> recordDeleteEvent() async {
+    final event = AnalyticsEvent('delete');
+
+    event.customProperties
+      ..addStringProperty('username', 'file deleted')
+      ..addBoolProperty('Successful', true);
+
+    Amplify.Analytics.recordEvent(event: event);
+  }
+
+  // record datastore save event
+  Future<void> recordDataStoreSaveEvent() async {
+    final event = AnalyticsEvent('datastore save');
+
+    event.customProperties
+      ..addStringProperty('username', 'datastore saved')
+      ..addBoolProperty('Successful', true);
+
+    Amplify.Analytics.recordEvent(event: event);
+  }
+
+  // record datastore delete event
+  Future<void> recordDataStoreDeleteEvent() async {
+    final event = AnalyticsEvent('datastore delete');
+
+    event.customProperties
+      ..addStringProperty('username', 'datastore deleted')
+      ..addBoolProperty('Successful', true);
+
+    Amplify.Analytics.recordEvent(event: event);
+  }
+
   // DATASTORE FUNCTIONS
 
   Future<void> saveToDo(String name, String description) async {
@@ -489,6 +526,7 @@ class _MyAppState extends State<MyApp> {
       nameController.clear();
       descriptionController.clear();
       readToDo();
+      recordDataStoreSaveEvent();
       print('Saved item: $item');
     } on DataStoreException catch (e) {
       print(e.message);
@@ -516,6 +554,7 @@ class _MyAppState extends State<MyApp> {
       await Amplify.DataStore.delete(postToDelete);
       print('Deleted item: $items');
       readToDo();
+      recordDataStoreDeleteEvent();
     } on DataStoreException catch (e) {
       print(e.message);
     }
@@ -649,7 +688,6 @@ class _MyAppState extends State<MyApp> {
                           Platform.isLinux) {
                         downloadFile(item.key);
                       }
-                      recordDownloadEvent();
                     },
                     color: Colors.grey[700],
                   ),
@@ -697,7 +735,6 @@ class _MyAppState extends State<MyApp> {
           child: FloatingActionButton(
             onPressed: () {
               uploadFile();
-              recordUploadEvent();
               listAllWithGuestAccessLevel();
             },
             backgroundColor: Colors.green,

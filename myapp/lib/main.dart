@@ -547,9 +547,9 @@ class _MyAppState extends State<MyApp> {
             children: [
               // HOME PAGE
               Stack(children: [
-                Container(
-                  color: Colors.white,
-                ),
+                // Container(
+                //   color: Colors.white,
+                // ),
                 Center(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 0),
@@ -710,32 +710,45 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  Column apiPage() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+  Stack apiPage() {
+    return Stack(
+      // mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        ElevatedButton(
-          onPressed: () {
-            saveToDo();
-          },
-          style: ButtonStyle(
-            backgroundColor:
-                MaterialStateProperty.all<Color>(Colors.green[400]!),
-          ),
-          child: const Text(
-            'API',
+        Align(
+          alignment: Alignment.bottomLeft,
+          child: Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: ElevatedButton(
+              onPressed: () {
+                saveToDo();
+              },
+              style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.green[400]!),
+              ),
+              child: const Text(
+                'API',
+              ),
+            ),
           ),
         ),
-        ElevatedButton(
-          onPressed: () {
-            readToDo();
-          },
-          style: ButtonStyle(
-            backgroundColor:
-                MaterialStateProperty.all<Color>(Colors.green[600]!),
-          ),
-          child: const Text(
-            'Read',
+        Align(
+          // give some more padding to the bottom right button
+          alignment: Alignment.bottomRight,
+          child: Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: ElevatedButton(
+              onPressed: () {
+                readToDo();
+              },
+              style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.green[600]!),
+              ),
+              child: const Text(
+                'Read',
+              ),
+            ),
           ),
         ),
         // ElevatedButton(

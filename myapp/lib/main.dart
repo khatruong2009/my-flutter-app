@@ -293,9 +293,14 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  // STATE VARIABLES
   int count = 0;
   var list = [];
   var todos = [];
+
+  // text form states
+  String todoName = '';
+  String todoDescription = '';
 
   @override
   void initState() {
@@ -468,14 +473,18 @@ class _MyAppState extends State<MyApp> {
 
   // DATASTORE FUNCTIONS
 
-  Future<void> saveToDo() async {
+  Future<void> saveToDo(String name, String description) async {
     final item = Todo(
-      name: 'My first todo',
-      description: 'Learn how to use Amplify DataStore.',
+      name: name,
+      description: description,
     );
 
     try {
       await Amplify.DataStore.save(item);
+      // reset the text fields to empty
+      nameController.clear();
+      descriptionController.clear();
+      readToDo();
       print('Saved item: $item');
     } on DataStoreException catch (e) {
       print(e.message);
@@ -494,7 +503,6 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  // write a function to delete todos based on id pressed on UI
   Future<void> deleteToDo() async {
     try {
       final items = await Amplify.DataStore.query(Todo.classType);
@@ -504,6 +512,11 @@ class _MyAppState extends State<MyApp> {
       print(e.message);
     }
   }
+
+  // name controller
+  final nameController = TextEditingController();
+  // description controller
+  final descriptionController = TextEditingController();
 
   // REST API FUNCTIONS
 
@@ -545,7 +558,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       // TAB CONTROLLER
       home: DefaultTabController(
-        length: 3,
+        length: 2,
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: const Color.fromARGB(255, 42, 35, 235),
@@ -653,7 +666,7 @@ class _MyAppState extends State<MyApp> {
       Align(
           alignment: Alignment.bottomLeft,
           child: Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(30),
             child: (FloatingActionButton(
               onPressed: () {
                 setState(() {
@@ -669,7 +682,7 @@ class _MyAppState extends State<MyApp> {
       Align(
         alignment: Alignment.bottomRight,
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(30.0),
           child: ElevatedButton(
             onPressed: () {
               _signOut();
@@ -689,7 +702,7 @@ class _MyAppState extends State<MyApp> {
       Align(
         alignment: Alignment.bottomCenter,
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(30.0),
           child: FloatingActionButton(
             onPressed: () {
               uploadFile();
@@ -707,88 +720,65 @@ class _MyAppState extends State<MyApp> {
 
   Stack dataStorePage() {
     return Stack(
-      // mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Center(
-          child: ListView(
-            children: [
-              for (var item in todos)
-                ListTile(
-                  title: Text(item.name),
-                  subtitle: Text(item.description),
-                  hoverColor: Colors.blue,
-                  trailing: IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () {
-                      deleteToDo();
-                    },
-                    color: Colors.red,
+        // input form containing name and description
+        Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                TextField(
+                  controller: nameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Name',
                   ),
-                )
-            ],
-          ),
-        ),
-        Align(
-          alignment: Alignment.bottomLeft,
-          child: Padding(
-            padding: const EdgeInsets.all(30.0),
-            child: ElevatedButton(
-              onPressed: () {
-                saveToDo();
-              },
-              style: ButtonStyle(
-                backgroundColor:
-                    MaterialStateProperty.all<Color>(Colors.green[400]!),
-              ),
-              child: const Text(
-                'API',
-              ),
+                  onChanged: (value) => todoName = value,
+                ),
+                TextField(
+                  controller: descriptionController,
+                  decoration: const InputDecoration(
+                    labelText: 'Description',
+                  ),
+                  onChanged: (value) => todoDescription = value,
+                ),
+                // submit button
+                ElevatedButton(
+                  onPressed: () {
+                    saveToDo(todoName, todoDescription);
+                  },
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.green[400]!),
+                  ),
+                  child: const Text(
+                    'Save',
+                  ),
+                ),
+                // list of todos
+                Center(
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: [
+                      for (var item in todos)
+                        ListTile(
+                          title: Text(item.name),
+                          subtitle: Text(item.description),
+                          hoverColor: Colors.blue,
+                          trailing: IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () {
+                              deleteToDo();
+                            },
+                            color: Colors.red,
+                          ),
+                        )
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ),
-        Align(
-          // give some more padding to the bottom right button
-          alignment: Alignment.bottomRight,
-          child: Padding(
-            padding: const EdgeInsets.all(30.0),
-            child: ElevatedButton(
-              onPressed: () {
-                readToDo();
-              },
-              style: ButtonStyle(
-                backgroundColor:
-                    MaterialStateProperty.all<Color>(Colors.green[600]!),
-              ),
-              child: const Text(
-                'Read',
-              ),
-            ),
-          ),
-        ),
-        // ElevatedButton(
-        //   onPressed: () {
-        //     postToDo();
-        //   },
-        //   style: ButtonStyle(
-        //     backgroundColor: MaterialStateProperty.all<Color>(
-        //         Colors.green[800]!),
-        //   ),
-        //   child: const Text(
-        //     'Post Rest API',
-        //   ),
-        // ),
-        // ElevatedButton(
-        //   onPressed: () {
-        //     getToDo();
-        //   },
-        //   style: ButtonStyle(
-        //     backgroundColor: MaterialStateProperty.all<Color>(
-        //         Colors.green[900]!),
-        //   ),
-        //   child: const Text(
-        //     'Get Rest API',
-        //   ),
-        // ),
       ],
     );
   }

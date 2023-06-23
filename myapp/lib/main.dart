@@ -345,6 +345,7 @@ class _MyAppState extends State<MyApp> {
         onProgress: (p0) =>
             print('Progress: ${p0.transferredBytes} / ${p0.totalBytes} %)'),
       ).result;
+      listAllWithGuestAccessLevel();
     } on StorageException catch (e) {
       print(e.message);
       rethrow;
@@ -411,6 +412,7 @@ class _MyAppState extends State<MyApp> {
           print('Progress: ${p0.transferredBytes} / ${p0.totalBytes} %)');
         },
       ).result;
+      listAllWithGuestAccessLevel();
     } on StorageException catch (e) {
       print(e.message);
       rethrow;
@@ -424,6 +426,7 @@ class _MyAppState extends State<MyApp> {
               key: key, localFile: AWSFile.fromPath(key))
           .result;
       print('File downloaded');
+      listAllWithGuestAccessLevel();
     } on StorageException catch (e) {
       print(e.message);
       rethrow;
@@ -442,6 +445,7 @@ class _MyAppState extends State<MyApp> {
           accessLevel: StorageAccessLevel,
         ),
       ).result;
+      listAllWithGuestAccessLevel();
       print('File removed');
     } on StorageException catch (e) {
       print(e.message);
@@ -503,11 +507,15 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  Future<void> deleteToDo() async {
+  Future<void> deleteToDo(id) async {
     try {
       final items = await Amplify.DataStore.query(Todo.classType);
-      await Amplify.DataStore.delete(items[0]);
+      final postToDelete =
+          (await Amplify.DataStore.query(Todo.classType, where: Todo.ID.eq(id)))
+              .first;
+      await Amplify.DataStore.delete(postToDelete);
       print('Deleted item: $items');
+      readToDo();
     } on DataStoreException catch (e) {
       print(e.message);
     }
@@ -652,9 +660,7 @@ class _MyAppState extends State<MyApp> {
                         key: item.key,
                         StorageAccessLevel: StorageAccessLevel.guest,
                       );
-                      setState(() {
-                        listAllWithGuestAccessLevel();
-                      });
+                      listAllWithGuestAccessLevel();
                     },
                     color: Colors.red,
                   ),
@@ -669,10 +675,7 @@ class _MyAppState extends State<MyApp> {
             padding: const EdgeInsets.all(30),
             child: (FloatingActionButton(
               onPressed: () {
-                setState(() {
-                  listAllWithGuestAccessLevel();
-                  print('List Refreshed');
-                });
+                listAllWithGuestAccessLevel();
               },
               backgroundColor: Colors.green,
               child: const Icon(Icons.refresh),
@@ -707,6 +710,7 @@ class _MyAppState extends State<MyApp> {
             onPressed: () {
               uploadFile();
               recordUploadEvent();
+              listAllWithGuestAccessLevel();
             },
             backgroundColor: Colors.green,
             child: const Icon(
@@ -760,13 +764,14 @@ class _MyAppState extends State<MyApp> {
                   children: [
                     for (var item in todos)
                       ListTile(
+                        key: Key(item.id),
                         title: Text(item.name),
                         subtitle: Text(item.description),
                         hoverColor: Colors.blue,
                         trailing: IconButton(
                           icon: const Icon(Icons.delete),
                           onPressed: () {
-                            deleteToDo();
+                            deleteToDo(item.id);
                           },
                           color: Colors.red,
                         ),

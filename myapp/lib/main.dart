@@ -301,6 +301,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     listAlbum();
     listAllWithGuestAccessLevel();
+    readToDo();
     super.initState();
   }
 
@@ -486,8 +487,19 @@ class _MyAppState extends State<MyApp> {
       final items = await Amplify.DataStore.query(Todo.classType);
       print(items);
       setState(() {
-        list = items;
+        todos = items;
       });
+    } on DataStoreException catch (e) {
+      print(e.message);
+    }
+  }
+
+  // write a function to delete todos based on id pressed on UI
+  Future<void> deleteToDo() async {
+    try {
+      final items = await Amplify.DataStore.query(Todo.classType);
+      await Amplify.DataStore.delete(items[0]);
+      print('Deleted item: $items');
     } on DataStoreException catch (e) {
       print(e.message);
     }
@@ -542,7 +554,7 @@ class _MyAppState extends State<MyApp> {
             bottom: const TabBar(
               tabs: [
                 Tab(icon: Icon(Icons.home)),
-                Tab(icon: Icon(Icons.upload_file)),
+                // Tab(icon: Icon(Icons.upload_file)),
                 Tab(icon: Icon(Icons.airplane_ticket_outlined)),
               ],
             ),
@@ -550,133 +562,9 @@ class _MyAppState extends State<MyApp> {
           body: TabBarView(
             children: [
               // HOME PAGE
-              Stack(children: [
-                // Container(
-                //   color: Colors.white,
-                // ),
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 0),
-                    child: ListView(
-                      children: [
-                        for (var item in list)
-                          ListTile(
-                            title: Text(item.key),
-                            subtitle: Text(item.lastModified.toString()),
-                            hoverColor: Colors.blue,
-                            trailing: IconButton(
-                              icon: const Icon(Icons.download),
-                              onPressed: () {
-                                if (Platform.isAndroid || Platform.isIOS) {
-                                  downloadToLocalFile(item.key);
-                                } else if (Platform.isWindows ||
-                                    Platform.isMacOS ||
-                                    Platform.isLinux) {
-                                  downloadFile(item.key);
-                                }
-                                recordDownloadEvent();
-                              },
-                              color: Colors.grey[700],
-                            ),
-                            leading: IconButton(
-                              icon: const Icon(Icons.delete),
-                              onPressed: () {
-                                removeFile(
-                                  key: item.key,
-                                  StorageAccessLevel: StorageAccessLevel.guest,
-                                );
-                                setState(() {
-                                  listAllWithGuestAccessLevel();
-                                });
-                              },
-                              color: Colors.red,
-                            ),
-                          )
-                      ],
-                    ),
-                  ),
-                ),
-                Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: (FloatingActionButton(
-                        onPressed: () {
-                          setState(() {
-                            listAllWithGuestAccessLevel();
-                            print('List Refreshed');
-                          });
-                        },
-                        backgroundColor: Colors.green,
-                        child: const Icon(Icons.refresh),
-                      )),
-                    )),
-                // sign out button
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        _signOut();
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const Login()));
-                      },
-                      // change color of the button to red
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.red),
-                      ),
-                      child: const Text(
-                        'Log Out',
-                      ),
-                    ),
-                  ),
-                ),
-                // Align(
-                //   alignment: Alignment.topLeft,
-                //   child: Padding(
-                //     padding: const EdgeInsets.all(20.0),
-                //     child: ElevatedButton(
-                //       onPressed: () {
-                //         uploadFile();
-                //       },
-                //       style: ButtonStyle(
-                //         backgroundColor: MaterialStateProperty.all<Color>(
-                //             Colors.green[800]!),
-                //       ),
-                //       child: const Text(
-                //         'Upload',
-                //       ),
-                //     ),
-                //   ),
-                // )
-              ]),
+              homePage(context),
               // UPLOAD PAGE
-              Scaffold(
-                body: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          uploadFile();
-                          recordUploadEvent();
-                        },
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              Colors.green[800]!),
-                        ),
-                        child: const Text(
-                          'Upload',
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              // uploadPage(),
               // API PAGE
               Scaffold(
                 body: Center(
@@ -690,10 +578,156 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
+  Scaffold uploadPage() {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                uploadFile();
+                recordUploadEvent();
+              },
+              style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.green[800]!),
+              ),
+              child: const Text(
+                'Upload',
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Stack homePage(BuildContext context) {
+    return Stack(children: [
+      // Container(
+      //   color: Colors.white,
+      // ),
+      Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 0),
+          child: ListView(
+            children: [
+              for (var item in list)
+                ListTile(
+                  title: Text(item.key),
+                  subtitle: Text(item.lastModified.toString()),
+                  hoverColor: Colors.blue,
+                  trailing: IconButton(
+                    icon: const Icon(Icons.download),
+                    onPressed: () {
+                      if (Platform.isAndroid || Platform.isIOS) {
+                        downloadToLocalFile(item.key);
+                      } else if (Platform.isWindows ||
+                          Platform.isMacOS ||
+                          Platform.isLinux) {
+                        downloadFile(item.key);
+                      }
+                      recordDownloadEvent();
+                    },
+                    color: Colors.grey[700],
+                  ),
+                  leading: IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () {
+                      removeFile(
+                        key: item.key,
+                        StorageAccessLevel: StorageAccessLevel.guest,
+                      );
+                      setState(() {
+                        listAllWithGuestAccessLevel();
+                      });
+                    },
+                    color: Colors.red,
+                  ),
+                )
+            ],
+          ),
+        ),
+      ),
+      Align(
+          alignment: Alignment.bottomLeft,
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: (FloatingActionButton(
+              onPressed: () {
+                setState(() {
+                  listAllWithGuestAccessLevel();
+                  print('List Refreshed');
+                });
+              },
+              backgroundColor: Colors.green,
+              child: const Icon(Icons.refresh),
+            )),
+          )),
+      // sign out button
+      Align(
+        alignment: Alignment.bottomRight,
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: ElevatedButton(
+            onPressed: () {
+              _signOut();
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const Login()));
+            },
+            // change color of the button to red
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+            ),
+            child: const Text(
+              'Log Out',
+            ),
+          ),
+        ),
+      ),
+      Align(
+        alignment: Alignment.bottomCenter,
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: FloatingActionButton(
+            onPressed: () {
+              uploadFile();
+              recordUploadEvent();
+            },
+            backgroundColor: Colors.green,
+            child: const Icon(
+              Icons.publish_sharp,
+            ),
+          ),
+        ),
+      )
+    ]);
+  }
+
   Stack dataStorePage() {
     return Stack(
       // mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        Center(
+          child: ListView(
+            children: [
+              for (var item in todos)
+                ListTile(
+                  title: Text(item.name),
+                  subtitle: Text(item.description),
+                  hoverColor: Colors.blue,
+                  trailing: IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () {
+                      deleteToDo();
+                    },
+                    color: Colors.red,
+                  ),
+                )
+            ],
+          ),
+        ),
         Align(
           alignment: Alignment.bottomLeft,
           child: Padding(

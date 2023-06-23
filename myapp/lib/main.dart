@@ -69,16 +69,16 @@ class _LoginState extends State<Login> {
   }
 
   // listen to amplify events
-  // void observeEvents() {
-  //   stream = Amplify.Hub.listen([HubChannel.DataStore], (hubEvent) {
-  //     if (hubEvent.eventName == 'networkStatus') {
-  //       setState(() {
-  //         final status = hubEvent.payload as NetworkStatusEvent?;
-  //         networkIsUp = status?.active ?? false;
-  //       });
-  //     }
-  //   });
-  // }
+  void observeEvents() {
+    stream = Amplify.Hub.listen(HubChannel.DataStore, (hubEvent) {
+      if (hubEvent.eventName == 'networkStatus') {
+        setState(() {
+          final status = hubEvent.payload as NetworkStatusEvent?;
+          networkIsUp = status?.active ?? false;
+        });
+      }
+    });
+  }
 
   // Sign Up
   Future<void> _signUp() async {

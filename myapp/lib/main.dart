@@ -718,12 +718,12 @@ class _MyAppState extends State<MyApp> {
     ]);
   }
 
-  Stack dataStorePage() {
-    return Stack(
+  Column dataStorePage() {
+    return Column(
       children: [
         // input form containing name and description
         Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(10.0),
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -755,25 +755,23 @@ class _MyAppState extends State<MyApp> {
                   ),
                 ),
                 // list of todos
-                Center(
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: [
-                      for (var item in todos)
-                        ListTile(
-                          title: Text(item.name),
-                          subtitle: Text(item.description),
-                          hoverColor: Colors.blue,
-                          trailing: IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () {
-                              deleteToDo();
-                            },
-                            color: Colors.red,
-                          ),
-                        )
-                    ],
-                  ),
+                ListView(
+                  shrinkWrap: true,
+                  children: [
+                    for (var item in todos)
+                      ListTile(
+                        title: Text(item.name),
+                        subtitle: Text(item.description),
+                        hoverColor: Colors.blue,
+                        trailing: IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () {
+                            deleteToDo();
+                          },
+                          color: Colors.red,
+                        ),
+                      )
+                  ],
                 ),
               ],
             ),

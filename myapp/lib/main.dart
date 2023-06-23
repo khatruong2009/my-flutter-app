@@ -295,6 +295,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   int count = 0;
   var list = [];
+  var todos = [];
 
   @override
   void initState() {
@@ -484,6 +485,9 @@ class _MyAppState extends State<MyApp> {
     try {
       final items = await Amplify.DataStore.query(Todo.classType);
       print(items);
+      setState(() {
+        list = items;
+      });
     } on DataStoreException catch (e) {
       print(e.message);
     }
@@ -676,41 +680,17 @@ class _MyAppState extends State<MyApp> {
               // API PAGE
               Scaffold(
                 body: Center(
-                  child: apiPage(),
+                  child: dataStorePage(),
                 ),
               )
             ],
           ),
-          // bottomNavigationBar:
-          //     // BOTTOM NAVIGATION BAR,
-          //     BottomNavigationBar(
-          //   currentIndex: _selectedIndex,
-          //   onTap: (index) {
-          //     setState(() {
-          //       _selectedIndex = index;
-          //     });
-          //   },
-          //   items: const [
-          //     BottomNavigationBarItem(
-          //       icon: Icon(Icons.home),
-          //       label: 'Home',
-          //     ),
-          //     BottomNavigationBarItem(
-          //       icon: Icon(Icons.upload_file),
-          //       label: 'Upload',
-          //     ),
-          //     BottomNavigationBarItem(
-          //       icon: Icon(Icons.airplane_ticket_outlined),
-          //       label: 'API',
-          //     ),
-          //   ],
-          // ),
         ),
       ),
     );
   }
 
-  Stack apiPage() {
+  Stack dataStorePage() {
     return Stack(
       // mainAxisAlignment: MainAxisAlignment.center,
       children: [

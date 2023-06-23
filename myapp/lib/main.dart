@@ -669,18 +669,6 @@ class _MyAppState extends State<MyApp> {
           ),
         ),
       ),
-      Align(
-          alignment: Alignment.bottomLeft,
-          child: Padding(
-            padding: const EdgeInsets.all(30),
-            child: (FloatingActionButton(
-              onPressed: () {
-                listAllWithGuestAccessLevel();
-              },
-              backgroundColor: Colors.green,
-              child: const Icon(Icons.refresh),
-            )),
-          )),
       // sign out button
       Align(
         alignment: Alignment.bottomRight,
@@ -703,7 +691,7 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
       Align(
-        alignment: Alignment.bottomCenter,
+        alignment: Alignment.bottomLeft,
         child: Padding(
           padding: const EdgeInsets.all(30.0),
           child: FloatingActionButton(

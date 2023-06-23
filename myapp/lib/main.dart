@@ -32,7 +32,7 @@ class _LoginState extends State<Login> {
   String password = '';
   bool _isAmplifyConfigured = false;
 
-  StreamSubscription<HubEvent>? stream;
+  StreamSubscription<DataStoreHubEvent>? stream;
 
   bool networkIsUp = false;
 
@@ -676,59 +676,7 @@ class _MyAppState extends State<MyApp> {
               // API PAGE
               Scaffold(
                 body: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          saveToDo();
-                        },
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              Colors.green[400]!),
-                        ),
-                        child: const Text(
-                          'API',
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          readToDo();
-                        },
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              Colors.green[600]!),
-                        ),
-                        child: const Text(
-                          'Read',
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          postToDo();
-                        },
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              Colors.green[800]!),
-                        ),
-                        child: const Text(
-                          'Post Rest API',
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          getToDo();
-                        },
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              Colors.green[900]!),
-                        ),
-                        child: const Text(
-                          'Get Rest API',
-                        ),
-                      ),
-                    ],
-                  ),
+                  child: apiPage(),
                 ),
               )
             ],
@@ -759,6 +707,62 @@ class _MyAppState extends State<MyApp> {
           // ),
         ),
       ),
+    );
+  }
+
+  Column apiPage() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ElevatedButton(
+          onPressed: () {
+            saveToDo();
+          },
+          style: ButtonStyle(
+            backgroundColor:
+                MaterialStateProperty.all<Color>(Colors.green[400]!),
+          ),
+          child: const Text(
+            'API',
+          ),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            readToDo();
+          },
+          style: ButtonStyle(
+            backgroundColor:
+                MaterialStateProperty.all<Color>(Colors.green[600]!),
+          ),
+          child: const Text(
+            'Read',
+          ),
+        ),
+        // ElevatedButton(
+        //   onPressed: () {
+        //     postToDo();
+        //   },
+        //   style: ButtonStyle(
+        //     backgroundColor: MaterialStateProperty.all<Color>(
+        //         Colors.green[800]!),
+        //   ),
+        //   child: const Text(
+        //     'Post Rest API',
+        //   ),
+        // ),
+        // ElevatedButton(
+        //   onPressed: () {
+        //     getToDo();
+        //   },
+        //   style: ButtonStyle(
+        //     backgroundColor: MaterialStateProperty.all<Color>(
+        //         Colors.green[900]!),
+        //   ),
+        //   child: const Text(
+        //     'Get Rest API',
+        //   ),
+        // ),
+      ],
     );
   }
 }

@@ -52,7 +52,7 @@ class _LoginState extends State<Login> {
       final dataStorePlugin =
           AmplifyDataStore(modelProvider: ModelProvider.instance);
       await Amplify.addPlugins(
-        [auth, storage, analytics, dataStorePlugin, api],
+        [auth, storage, analytics, api, dataStorePlugin],
       );
 
       try {
@@ -141,133 +141,6 @@ class _LoginState extends State<Login> {
       return Future<bool>.value(false);
     }
   }
-
-  // LOGIN PAGE
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   return MaterialApp(
-  //       home: Builder(
-  //     builder: (context) => Scaffold(
-  //         appBar: AppBar(
-  //           backgroundColor: const Color.fromARGB(255, 42, 35, 235),
-  //           title: const Text('Login'),
-  //         ),
-  //         body: Stack(children: [
-  //           Container(
-  //             color: Colors.white,
-  //           ),
-  //           Center(
-  //               child: Column(
-  //             children: [
-  //               Padding(
-  //                 padding: const EdgeInsets.all(20.0),
-  //                 child: TextField(
-  //                   onChanged: (text) {
-  //                     email = text;
-  //                   },
-  //                   decoration: const InputDecoration(
-  //                       border: OutlineInputBorder(),
-  //                       labelText: 'Email',
-  //                       hintText: 'Enter your email'),
-  //                 ),
-  //               ),
-  //               Padding(
-  //                 padding: const EdgeInsets.all(20.0),
-  //                 child: TextField(
-  //                   obscureText: true,
-  //                   onChanged: (text) {
-  //                     password = text;
-  //                   },
-  //                   decoration: const InputDecoration(
-  //                       border: OutlineInputBorder(),
-  //                       labelText: 'Password',
-  //                       hintText: 'Enter your password'),
-  //                 ),
-  //               ),
-  //               Center(
-  //                 child: Row(
-  //                   children: [
-  //                     Padding(
-  //                       padding: const EdgeInsets.all(20.0),
-  //                       child: ElevatedButton(
-  //                         onPressed: () {
-  //                           if (email != null && password != null) {
-  //                             // sign in
-  //                             bool? loggedIn;
-  //                             _signIn().then((value) => loggedIn = value);
-  //                             print("DID LOGIN SUCCEED?");
-  //                             print(loggedIn);
-
-  //                             // only go to next page if sign in worked
-  //                             if (loggedIn == true) {
-  //                               Navigator.push(
-  //                                   context,
-  //                                   MaterialPageRoute(
-  //                                       builder: (context) => const MyApp()));
-  //                             } else {
-  //                               showDialog(
-  //                                   context: context,
-  //                                   builder: (BuildContext context) {
-  //                                     return AlertDialog(
-  //                                       title: const Text('Error'),
-  //                                       content: const Text(
-  //                                           'Email or password is incorrect'),
-  //                                       actions: [
-  //                                         TextButton(
-  //                                             onPressed: () {
-  //                                               Navigator.of(context).pop();
-  //                                             },
-  //                                             child: const Text('Close'))
-  //                                       ],
-  //                                     );
-  //                                   });
-  //                             }
-  //                             // Navigator.push(
-  //                             //     context,
-  //                             //     MaterialPageRoute(
-  //                             //         builder: (context) => const MyApp()));
-  //                           } else {
-  //                             showDialog(
-  //                                 context: context,
-  //                                 builder: (BuildContext context) {
-  //                                   return AlertDialog(
-  //                                     title: const Text('Error'),
-  //                                     content: const Text(
-  //                                         'Email or password is incorrect'),
-  //                                     actions: [
-  //                                       TextButton(
-  //                                           onPressed: () {
-  //                                             Navigator.of(context).pop();
-  //                                           },
-  //                                           child: const Text('Close'))
-  //                                     ],
-  //                                   );
-  //                                 });
-  //                           }
-  //                         },
-  //                         child: const Text('Login'),
-  //                       ),
-  //                     ),
-  //                     Padding(
-  //                       padding: const EdgeInsets.all(20.0),
-  //                       child: ElevatedButton(
-  //                         onPressed: () {
-  //                           // _configureAmplify();
-  //                           _signUp();
-  //                         },
-  //                         child: const Text('Sign Up'),
-  //                       ),
-  //                     ),
-  //                   ],
-  //                 ),
-  //               ),
-  //               // add a sign up button
-  //             ],
-  //           ))
-  //         ])),
-  //   ));
-  // }
 
   // use Authenticator widget
   @override
